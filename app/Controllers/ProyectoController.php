@@ -316,6 +316,7 @@ final class ProyectoController
         $fodaDebilidades = [];
         $bcgFortalezas = [];
         $bcgDebilidades = [];
+        $petiAnalysis = null;
 
         if ($renderOnlySection === 'objetivos') {
             try {
@@ -383,6 +384,14 @@ final class ProyectoController
             }
         }
 
+        if ($renderOnlySection === '' || $renderOnlySection === 'overview') {
+            try {
+                $petiAnalysis = (new PetiAnalysisService())->build($supabase, $idProyecto, $proyecto);
+            } catch (Throwable $e) {
+                $petiAnalysis = null;
+            }
+        }
+
         if ($token === '') {
             $token = $this->issueProjectToken($idProyecto);
             $query = [];
@@ -415,6 +424,41 @@ final class ProyectoController
         }
 
         require dirname(__DIR__) . '/Views/proyectos/detalle-proyecto.php';
+    }
+
+    public function report(): void
+    {
+        $authController = new AuthController();
+        $authUser = $authController->requireAuth();
+
+        $token = trim((string) ($_GET['t'] ?? ''));
+        $idProyecto = $token !== '' ? $this->projectIdFromToken($token) : (int) ($_GET['id'] ?? 0);
+        if ($idProyecto <= 0) {
+            Session::flash('error', 'Proyecto invalido.');
+            $this->redirect('/proyectos.php');
+        }
+
+        try {
+            $supabase = new SupabaseClient();
+            $idPersona = (int) ($authUser['id_persona'] ?? 0);
+            $proyecto = $this->findAccessibleProyecto($supabase, $idProyecto, $idPersona);
+            if ($proyecto === null) {
+                Session::flash('error', 'No tienes acceso a este proyecto.');
+                $this->redirect('/proyectos.php');
+            }
+
+            if ($token === '') {
+                $token = $this->issueProjectToken($idProyecto);
+            }
+
+            $projectToken = $token;
+            $petiAnalysis = (new PetiAnalysisService())->build($supabase, $idProyecto, $proyecto);
+        } catch (Throwable $e) {
+            Session::flash('error', $this->friendlySupabaseError($e, 'No se pudo generar el reporte PETI.'));
+            $this->redirect('/proyectos.php');
+        }
+
+        require dirname(__DIR__) . '/Views/proyectos/reporte-proyecto.php';
     }
 
     public function saveFodaCadena(): void

@@ -32,6 +32,10 @@
   ];
   $fodaFortalezas = is_array($fodaFortalezas ?? null) ? $fodaFortalezas : [];
   $fodaDebilidades = is_array($fodaDebilidades ?? null) ? $fodaDebilidades : [];
+  $petiAnalysis = is_array($petiAnalysis ?? null) ? $petiAnalysis : null;
+  $petiPercent = (int) ($petiAnalysis['percent'] ?? 0);
+  $petiStatus = is_array($petiAnalysis['status'] ?? null) ? $petiAnalysis['status'] : ['label' => 'Sin diagnostico', 'description' => 'Completa los modulos para calcular el avance.'];
+  $petiBarColor = $petiPercent >= 85 ? '#059669' : ($petiPercent >= 60 ? '#65a30d' : ($petiPercent >= 35 ? '#d97706' : '#dc2626'));
 ?>
 
 <div class="min-h-screen grid grid-cols-1 md:grid-cols-[16rem_1fr]">
@@ -80,6 +84,9 @@
               Editar nombre
             </button>
           <?php endif; ?>
+          <a href="reporte-proyecto.php?t=<?php echo urlencode($projectToken); ?>" class="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+            Reporte PETI
+          </a>
           <a href="proyectos.php" class="rounded-xl border border-neutral-300 px-4 py-2 text-sm font-medium hover:bg-neutral-100">
             Volver
           </a>
@@ -187,6 +194,68 @@
           </div>
 
           <div class="mt-5 space-y-4">
+            <?php if ($petiAnalysis !== null) : ?>
+              <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div class="max-w-xl">
+                    <div class="text-sm font-semibold text-neutral-900">Semaforo de madurez PETI</div>
+                    <div class="mt-2 flex flex-wrap items-center gap-3">
+                      <div class="text-3xl font-semibold tracking-tight text-neutral-900"><?php echo $petiPercent; ?>%</div>
+                      <div>
+                        <div class="inline-flex rounded-full px-3 py-1 text-xs font-semibold text-white" style="background-color: <?php echo htmlspecialchars($petiBarColor, ENT_QUOTES, 'UTF-8'); ?>;">
+                          <?php echo htmlspecialchars((string) ($petiStatus['label'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                        <p class="mt-2 text-sm text-neutral-600">
+                          <?php echo htmlspecialchars((string) ($petiStatus['description'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="mt-4 h-2 overflow-hidden rounded-full border border-neutral-200 bg-white">
+                      <div class="h-full rounded-full" style="width: <?php echo max(0, min(100, $petiPercent)); ?>%; background-color: <?php echo htmlspecialchars($petiBarColor, ENT_QUOTES, 'UTF-8'); ?>;"></div>
+                    </div>
+                  </div>
+
+                  <a href="reporte-proyecto.php?t=<?php echo urlencode($projectToken); ?>" class="inline-flex h-10 items-center justify-center rounded-xl border border-neutral-200 bg-white px-4 text-sm font-semibold text-neutral-800 shadow-sm hover:bg-neutral-50">
+                    Ver reporte imprimible
+                  </a>
+                </div>
+
+                <div class="mt-5 grid gap-3 md:grid-cols-4">
+                  <?php foreach ((array) ($petiAnalysis['checks'] ?? []) as $check) : ?>
+                    <?php $isComplete = !empty($check['complete']); ?>
+                    <div class="rounded-xl border <?php echo $isComplete ? 'border-emerald-200 bg-white' : 'border-amber-200 bg-white'; ?> p-4">
+                      <div class="flex items-start gap-3">
+                        <div class="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white" style="background-color: <?php echo $isComplete ? '#059669' : '#d97706'; ?>;">
+                          <?php if ($isComplete) : ?>
+                            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5" />
+                            </svg>
+                          <?php else : ?>
+                            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01" />
+                              <circle cx="12" cy="12" r="9" />
+                            </svg>
+                          <?php endif; ?>
+                        </div>
+                        <div>
+                          <div class="text-sm font-semibold text-neutral-900"><?php echo htmlspecialchars((string) ($check['label'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></div>
+                          <div class="mt-1 text-xs leading-relaxed text-neutral-600"><?php echo htmlspecialchars((string) ($check['detail'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></div>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+                <div class="text-sm font-semibold text-neutral-900">Resumen ejecutivo generado</div>
+                <p class="mt-1 text-sm text-neutral-600">Texto automatico para sustentar el avance del PETI.</p>
+                <div class="mt-4 rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-700">
+                  <?php echo nl2br(htmlspecialchars((string) ($petiAnalysis['summary'] ?? ''), ENT_QUOTES, 'UTF-8')); ?>
+                </div>
+              </div>
+            <?php endif; ?>
+
             <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
               <div class="text-sm font-semibold text-neutral-900">Misión</div>
               <?php if ($misionTexto === '') : ?>
