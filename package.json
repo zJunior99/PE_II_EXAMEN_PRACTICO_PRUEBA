@@ -1,0 +1,25 @@
+{
+  "name": "ruta-inteligente-ti",
+  "version": "1.0.0",
+  "description": "- Nestor Serrano Ibañez\r - Junior Mamani Estaña",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i ./src/input.css -o ./public/dist/output.css --config ./tailwind.config.js --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./public/dist/output.css --config ./tailwind.config.js --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NestorSnIbz/ruta-inteligente-ti.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NestorSnIbz/ruta-inteligente-ti/issues"
+  },
+  "homepage": "https://github.com/NestorSnIbz/ruta-inteligente-ti#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
+    "tailwindcss": "^4.2.4"
+  }
+}
