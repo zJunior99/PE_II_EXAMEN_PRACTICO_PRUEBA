@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reporte PETI - Ruta Inteligente TI</title>
+  <title>Informe PETI - Ruta Inteligente TI</title>
   <link href="/dist/output.css" rel="stylesheet" />
   <style>
     @media print {
@@ -32,13 +32,14 @@
   $fodaItems = array_merge((array) ($data['foda_cadena'] ?? []), (array) ($data['foda_bcg'] ?? []));
   $cadena = is_array($data['cadena'] ?? null) ? $data['cadena'] : [];
   $bcg = is_array($data['bcg'] ?? null) ? $data['bcg'] : [];
+  $bcgProductos = is_array($bcg['product_rows'] ?? null) ? $bcg['product_rows'] : [];
 ?>
 
 <header class="no-print border-b border-neutral-200 bg-white">
   <div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-6 py-4">
     <div>
-      <div class="text-sm font-semibold text-neutral-500">Reporte imprimible</div>
-      <h1 class="text-xl font-semibold tracking-tight">Reporte PETI</h1>
+      <div class="text-sm font-semibold text-neutral-500">Informe listo para PDF</div>
+      <h1 class="text-xl font-semibold tracking-tight">Informe PETI</h1>
     </div>
     <div class="flex flex-wrap gap-2">
       <button type="button" onclick="window.print()" class="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">
@@ -57,7 +58,7 @@
       <div>
         <div class="text-sm font-semibold text-neutral-500" style="text-transform: uppercase; letter-spacing: .04em;">Examen Practica Unidad II - PETI</div>
         <h2 class="mt-3 text-3xl font-semibold tracking-tight"><?php echo htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8'); ?></h2>
-        <p class="mt-2 text-sm text-neutral-600">Generado el <?php echo htmlspecialchars((string) ($petiAnalysis['generated_at'] ?? date('d/m/Y H:i')), ENT_QUOTES, 'UTF-8'); ?></p>
+        <p class="mt-2 text-sm text-neutral-600">Fecha de generacion: <?php echo htmlspecialchars((string) ($petiAnalysis['generated_at'] ?? date('d/m/Y H:i')), ENT_QUOTES, 'UTF-8'); ?></p>
       </div>
       <div class="w-56 rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
         <div class="text-sm font-semibold text-neutral-600">Madurez PETI</div>
@@ -78,6 +79,130 @@
   </section>
 
   <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">Mision, vision y valores</h3>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+        <div class="text-sm font-semibold">Mision</div>
+        <p class="mt-3 text-sm leading-relaxed text-neutral-700"><?php echo $mision !== '' ? nl2br(htmlspecialchars($mision, ENT_QUOTES, 'UTF-8')) : 'Pendiente de registrar.'; ?></p>
+      </div>
+      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+        <div class="text-sm font-semibold">Vision</div>
+        <p class="mt-3 text-sm leading-relaxed text-neutral-700"><?php echo $vision !== '' ? nl2br(htmlspecialchars($vision, ENT_QUOTES, 'UTF-8')) : 'Pendiente de registrar.'; ?></p>
+      </div>
+    </div>
+    <div class="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+      <div class="text-sm font-semibold">Valores</div>
+      <?php if (empty($valores)) : ?>
+        <p class="mt-3 text-sm text-neutral-600">Pendiente de registrar.</p>
+      <?php else : ?>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <?php foreach ($valores as $valor) : ?>
+            <span class="rounded-full border border-neutral-200 bg-white px-3 py-1 text-sm text-neutral-700"><?php echo htmlspecialchars((string) ($valor['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">Objetivos estrategicos y especificos</h3>
+    <?php if (empty($objetivosEstrategicos)) : ?>
+      <p class="mt-3 text-sm text-neutral-600">Pendiente de registrar objetivos estrategicos.</p>
+    <?php else : ?>
+      <div class="mt-4 overflow-x-auto rounded-xl border border-neutral-200">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-neutral-50 text-xs font-semibold text-neutral-600">
+            <tr>
+              <th class="w-14 px-4 py-3">#</th>
+              <th class="px-4 py-3">Objetivo estrategico</th>
+              <th class="px-4 py-3">Objetivos especificos</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-neutral-200">
+            <?php foreach ($objetivosEstrategicos as $index => $objetivo) : ?>
+              <?php
+                $idObjetivo = (int) ($objetivo['id_objetivo_est'] ?? 0);
+                $children = array_values(array_filter($objetivosEspecificos, fn ($item) => (int) ($item['id_objetivo_est'] ?? 0) === $idObjetivo));
+              ?>
+              <tr>
+                <td class="px-4 py-3 text-neutral-500"><?php echo (int) $index + 1; ?></td>
+                <td class="px-4 py-3 align-top text-neutral-800"><?php echo htmlspecialchars((string) ($objetivo['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
+                <td class="px-4 py-3 align-top text-neutral-700">
+                  <?php if (empty($children)) : ?>
+                    <span class="text-neutral-500">Sin objetivos especificos registrados.</span>
+                  <?php else : ?>
+                    <div class="space-y-1">
+                      <?php foreach ($children as $child) : ?>
+                        <div>- <?php echo htmlspecialchars((string) ($child['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></div>
+                      <?php endforeach; ?>
+                    </div>
+                  <?php endif; ?>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    <?php endif; ?>
+  </section>
+
+  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">Resultado de cadena de valor</h3>
+    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+        <div class="text-sm font-semibold">Puntaje obtenido</div>
+        <div class="mt-2 text-2xl font-semibold"><?php echo (int) ($cadena['sum'] ?? 0); ?></div>
+      </div>
+      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+        <div class="text-sm font-semibold">Respuestas</div>
+        <div class="mt-2 text-2xl font-semibold"><?php echo (int) ($cadena['valid'] ?? 0); ?>/<?php echo (int) ($cadena['count'] ?? 0); ?></div>
+      </div>
+      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+        <div class="text-sm font-semibold">Potencial</div>
+        <?php $potential = $cadena['potential'] ?? null; ?>
+        <div class="mt-2 text-2xl font-semibold"><?php echo is_numeric($potential) ? number_format(((float) $potential) * 100, 2) . '%' : 'Pendiente'; ?></div>
+      </div>
+    </div>
+    <?php if ((int) ($cadena['missing'] ?? 0) > 0) : ?>
+      <p class="mt-4 text-sm text-neutral-600">Faltan <?php echo (int) ($cadena['missing'] ?? 0); ?> pregunta(s) por responder para completar el diagnostico.</p>
+    <?php endif; ?>
+  </section>
+
+  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <h3 class="text-lg font-semibold">Matriz BCG con clasificacion por producto</h3>
+    <?php if (empty($bcgProductos)) : ?>
+      <p class="mt-3 text-sm text-neutral-600">Pendiente de registrar productos BCG.</p>
+    <?php else : ?>
+      <div class="mt-4 overflow-x-auto rounded-xl border border-neutral-200">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-neutral-50 text-xs font-semibold text-neutral-600">
+            <tr>
+              <th class="px-4 py-3">Producto</th>
+              <th class="px-4 py-3">Ventas</th>
+              <th class="px-4 py-3">% ventas</th>
+              <th class="px-4 py-3">TCM</th>
+              <th class="px-4 py-3">PRM</th>
+              <th class="px-4 py-3">Clasificacion</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-neutral-200">
+            <?php foreach ($bcgProductos as $producto) : ?>
+              <tr>
+                <td class="px-4 py-3 text-neutral-800"><?php echo htmlspecialchars((string) ($producto['nombre'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
+                <td class="px-4 py-3 text-neutral-700"><?php echo is_numeric($producto['ventas_empresa'] ?? null) ? number_format((float) $producto['ventas_empresa'], 2) : '-'; ?></td>
+                <td class="px-4 py-3 text-neutral-700"><?php echo is_numeric($producto['porcentaje_ventas'] ?? null) ? number_format((float) $producto['porcentaje_ventas'], 2) . '%' : '-'; ?></td>
+                <td class="px-4 py-3 text-neutral-700"><?php echo is_numeric($producto['tcm'] ?? null) ? number_format((float) $producto['tcm'], 2) : '-'; ?></td>
+                <td class="px-4 py-3 text-neutral-700"><?php echo is_numeric($producto['prm'] ?? null) ? number_format((float) $producto['prm'], 2) : '-'; ?></td>
+                <td class="px-4 py-3 font-semibold text-neutral-800"><?php echo htmlspecialchars((string) (($producto['clasificacion'] ?? '') ?: 'Sin calcular'), ENT_QUOTES, 'UTF-8'); ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    <?php endif; ?>
+  </section>
+
+  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
     <h3 class="text-lg font-semibold">Checklist de avance</h3>
     <div class="mt-4 grid gap-3 md:grid-cols-2">
       <?php foreach ((array) ($petiAnalysis['checks'] ?? []) as $check) : ?>
@@ -93,74 +218,7 @@
         </div>
       <?php endforeach; ?>
     </div>
-  </section>
-
-  <section class="grid gap-6 md:grid-cols-2">
-    <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-      <h3 class="text-lg font-semibold">Mision</h3>
-      <p class="mt-3 text-sm leading-relaxed text-neutral-700"><?php echo $mision !== '' ? nl2br(htmlspecialchars($mision, ENT_QUOTES, 'UTF-8')) : 'Pendiente de registrar.'; ?></p>
-    </div>
-    <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-      <h3 class="text-lg font-semibold">Vision</h3>
-      <p class="mt-3 text-sm leading-relaxed text-neutral-700"><?php echo $vision !== '' ? nl2br(htmlspecialchars($vision, ENT_QUOTES, 'UTF-8')) : 'Pendiente de registrar.'; ?></p>
-    </div>
-  </section>
-
-  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-    <h3 class="text-lg font-semibold">Valores</h3>
-    <?php if (empty($valores)) : ?>
-      <p class="mt-3 text-sm text-neutral-600">Pendiente de registrar.</p>
-    <?php else : ?>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <?php foreach ($valores as $valor) : ?>
-          <span class="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-sm text-neutral-700"><?php echo htmlspecialchars((string) ($valor['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
-  </section>
-
-  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-    <h3 class="text-lg font-semibold">Objetivos</h3>
-    <?php if (empty($objetivosEstrategicos)) : ?>
-      <p class="mt-3 text-sm text-neutral-600">Pendiente de registrar objetivos estrategicos.</p>
-    <?php else : ?>
-      <div class="mt-4 space-y-3">
-        <?php foreach ($objetivosEstrategicos as $objetivo) : ?>
-          <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-            <div class="text-sm font-semibold text-neutral-900"><?php echo htmlspecialchars((string) ($objetivo['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></div>
-            <?php
-              $idObjetivo = (int) ($objetivo['id_objetivo_est'] ?? 0);
-              $children = array_values(array_filter($objetivosEspecificos, fn ($item) => (int) ($item['id_objetivo_est'] ?? 0) === $idObjetivo));
-            ?>
-            <?php if (!empty($children)) : ?>
-              <div class="mt-3 space-y-1 text-sm text-neutral-700">
-                <?php foreach ($children as $child) : ?>
-                  <div>- <?php echo htmlspecialchars((string) ($child['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></div>
-                <?php endforeach; ?>
-              </div>
-            <?php endif; ?>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
-  </section>
-
-  <section class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-    <h3 class="text-lg font-semibold">Diagnostico estrategico</h3>
-    <div class="mt-4 grid gap-4 sm:grid-cols-3">
-      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-        <div class="text-sm font-semibold">Cadena de valor</div>
-        <p class="mt-2 text-sm text-neutral-600"><?php echo (int) ($cadena['valid'] ?? 0); ?> de <?php echo (int) ($cadena['count'] ?? 0); ?> respuestas completadas.</p>
-      </div>
-      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-        <div class="text-sm font-semibold">FODA</div>
-        <p class="mt-2 text-sm text-neutral-600"><?php echo count($fodaItems); ?> elemento(s) registrados.</p>
-      </div>
-      <div class="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-        <div class="text-sm font-semibold">BCG</div>
-        <p class="mt-2 text-sm text-neutral-600"><?php echo (int) ($bcg['products'] ?? 0); ?> producto(s), <?php echo (int) ($bcg['results'] ?? 0); ?> resultado(s).</p>
-      </div>
-    </div>
+    <p class="mt-4 text-sm text-neutral-600">FODA registrado: <?php echo count($fodaItems); ?> elemento(s) desde cadena de valor y BCG.</p>
   </section>
 </main>
 </body>

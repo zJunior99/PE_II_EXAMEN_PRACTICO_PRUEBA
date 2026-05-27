@@ -151,10 +151,34 @@ final class PetiAnalysisService
 
     private function bcgSummary(SupabaseClient $supabase, int $idProyecto): array
     {
+        $products = $this->bcgProducts($supabase, $idProyecto);
+
         return [
-            'products' => $this->countRows($supabase, '/rest/v1/bcg_producto', ['id_proyecto' => 'eq.' . $idProyecto]),
+            'products' => count($products),
             'results' => $this->countRows($supabase, '/rest/v1/bcg_resultado', ['id_proyecto' => 'eq.' . $idProyecto]),
+            'product_rows' => $products,
         ];
+    }
+
+    private function bcgProducts(SupabaseClient $supabase, int $idProyecto): array
+    {
+        $response = $supabase->request(
+            'GET',
+            '/rest/v1/bcg_producto',
+            [
+                'select' => 'id_producto_bcg,nombre,ventas_empresa,porcentaje_ventas,tcm,prm,clasificacion',
+                'id_proyecto' => 'eq.' . $idProyecto,
+                'order' => 'id_producto_bcg.asc',
+                'limit' => 1000,
+            ],
+            $this->headers($supabase)
+        );
+
+        if ((int) ($response['status'] ?? 500) >= 400 || !is_array($response['data'] ?? null)) {
+            return [];
+        }
+
+        return array_values(array_filter($response['data'], fn ($row) => is_array($row)));
     }
 
     private function countRows(SupabaseClient $supabase, string $path, array $query): int
