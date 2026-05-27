@@ -92,10 +92,10 @@ Esta mejora permite generar una evidencia formal del trabajo realizado en el sis
 
 #### Captura de la mejora
 
-![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-1.png)
-![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-2.png)
-![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-3.png)
-![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-4.png)
+![Informe PETI Imprimible 1](docs/capturas/informe-peti-pdf-1.png)
+![Informe PETI Imprimible 2](docs/capturas/informe-peti-pdf-2.png)
+![Informe PETI Imprimible 3](docs/capturas/informe-peti-pdf-3.png)
+![Informe PETI Imprimible 4](docs/capturas/informe-peti-pdf-4.png)
 
 ---
 
