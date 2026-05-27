@@ -1,115 +1,101 @@
-# 🚀 Ruta Inteligente TI
+# Examen Práctica Unidad II - PETI
 
-## Estudiantes
-- Nestor Serrano Ibañez
-- Junior Mamani Estaña
+## Alumno
+Junior Mamani Estaña
 
-## 🧰 Tecnologías
+## Fecha
+27 de mayo de 2026
 
-### 🔙 Backend
-- PHP 8.1  
-- Patrón MVC (Modelo - Vista - Controlador)
+## Repositorio GitHub
+URL del repositorio público:
 
-### 🎨 Frontend
-- HTML5  
-- CSS3  
-- Tailwind CSS  
-- JavaScript  
+[PE_II_EXAMEN_PRACTICO](https://github.com/zJunior99/PE_II_EXAMEN_PRACTICO_PRUEBA.git)
 
-### 🗄️ Base de Datos
-- PostgreSQL  
+## Descripción del Sistema
 
-### ☁️ Backend as a Service (BaaS)
-Se utiliza Supabase para:
-- Gestión de base de datos  
-- Exposición automática de APIs  
-- Autenticación y gestión de usuarios  
-- Almacenamiento de archivos  
+El sistema **Ruta Inteligente TI** es una aplicación web para la elaboración y gestión de un Plan Estratégico de Tecnologías de Información (PETI). Permite registrar proyectos, definir misión, visión, valores, objetivos estratégicos y objetivos específicos, además de realizar análisis mediante cadena de valor, FODA y matriz BCG.
 
----
+El sistema fue desarrollado con PHP bajo el patrón MVC, utilizando Supabase/PostgreSQL como servicio de base de datos y Tailwind CSS para la interfaz.
 
-## 🏗️ Arquitectura del Sistema
+## Mejoras Implementadas
 
-El sistema está basado en el patrón **MVC**, complementado con un enfoque de **Backend as a Service (BaaS)** mediante Supabase.
+### Mejora 1: Semáforo de Madurez PETI
 
-Este enfoque permite:
-- Separación clara de responsabilidades  
-- Mayor escalabilidad  
-- Reducción de complejidad en el backend  
+Se implementó un semáforo de madurez que calcula automáticamente el avance del proyecto PETI según los módulos completados dentro del sistema.
 
----
+El cálculo considera componentes como:
 
-## 🧩 Arquitectura en Capas
+- Misión
+- Visión
+- Valores
+- Objetivos estratégicos
+- Objetivos específicos
+- Cadena de valor
+- FODA
+- Matriz BCG
 
-### 🎯 Capa de Presentación
-Encargada de la interfaz de usuario y la interacción con el usuario.  
-**Tecnologías:** HTML, CSS, Tailwind CSS, JavaScript  
+El resultado se muestra como un porcentaje de avance y un estado de madurez:
 
-### ⚙️ Capa de Aplicación
-Gestiona la lógica de negocio, validaciones y flujo de datos.  
-Actúa como intermediaria entre la presentación y los datos.  
+- Inicial
+- En progreso
+- Avanzado
+- Completo
 
-### 🔌 Capa de Servicios
-Encapsula la comunicación con servicios externos.  
-Se encarga de la integración con Supabase.  
+Esta mejora permite identificar rápidamente qué tan desarrollado se encuentra el plan estratégico y qué módulos aún están pendientes.
 
-### 💾 Capa de Datos
-Responsable de la persistencia de la información.  
-Gestiona el acceso a la base de datos PostgreSQL.  
+#### Captura de la mejora
+
+![Semáforo de Madurez PETI](docs/capturas/semaforo-madurez-peti.png)
 
 ---
 
-## 📌 Notas
-- Se sigue una arquitectura modular y escalable.  
-- Supabase reduce la necesidad de implementar servicios backend complejos desde cero.  
-- El uso de MVC facilita el mantenimiento y la organización del código.  
+### Mejora 2: Generador de Resumen Ejecutivo PETI
+
+Se agregó un generador automático de resumen ejecutivo que utiliza la información registrada en el proyecto para producir una descripción formal del avance del PETI.
+
+El resumen considera:
+
+- Nombre del proyecto
+- Porcentaje de avance
+- Estado de madurez
+- Misión y visión
+- Valores registrados
+- Objetivos estratégicos y específicos
+- Estado de cadena de valor
+- Estado de FODA
+- Estado de matriz BCG
+
+Esta mejora permite que el sistema no solo almacene información, sino que también genere una interpretación ejecutiva útil para presentar el avance del proyecto.
+
+#### Captura de la mejora
+
+![Resumen Ejecutivo PETI](docs/capturas/resumen-ejecutivo-peti.png)
 
 ---
 
-## 📋 Requerimientos del Sistema
+### Mejora 3: Informe PETI Imprimible / Exportable a PDF
 
-### 🔹 Requerimientos Funcionales
+Se implementó una vista de informe PETI preparada para impresión o exportación a PDF desde el navegador.
 
-- **RF01** – Registrar usuarios en el sistema  
-- **RF02** – Autenticar usuarios mediante credenciales  
-- **RF03** – Gestionar sesiones de usuario  
-- **RF04** – Visualizar un dashboard con el resumen del plan estratégico  
-- **RF05** – Navegar entre módulos del sistema  
-- **RF06** – Registrar una empresa  
-- **RF07** – Definir la misión, visión y los valores de la empresa  
-- **RF08** – Gestionar objetivos estratégicos  
-- **RF09** – Registrar análisis FODA  
-- **RF10** – Registrar análisis PEST  
-- **RF11** – Registrar análisis de las 5 fuerzas de Porter  
-- **RF12** – Generar estrategias a partir del FODA  
-- **RF13** – Crear planes de acción (CAME)  
-- **RF14** – Guardar la información del plan estratégico en una base de datos  
-- **RF15** – Editar información registrada  
-- **RF16** – Eliminar información registrada  
-- **RF17** – Mostrar un resumen ejecutivo del plan  
-- **RF18** – Exportar el plan en formato PDF o Excel  
-- **RF19** – Realizar copias de seguridad de la información del sistema  
+El informe contiene:
 
----
+- Portada con nombre del proyecto y fecha
+- Nivel de madurez PETI
+- Resumen ejecutivo
+- Sección de misión, visión y valores
+- Tabla de objetivos estratégicos y objetivos específicos
+- Resultado de cadena de valor con puntaje
+- Tabla BCG con clasificación por producto
+- Checklist de avance del proyecto
 
-### ⚙️ Requerimientos No Funcionales
+Esta mejora permite generar una evidencia formal del trabajo realizado en el sistema y facilita la presentación del PETI como documento académico o ejecutivo.
 
-- **RNF01 – Seguridad**  
-  El sistema debe proteger la información mediante autenticación de usuarios, almacenamiento seguro de contraseñas y uso de conexiones cifradas (HTTPS).
+#### Captura de la mejora
 
-- **RNF02 – Rendimiento**  
-  El sistema debe responder en un tiempo máximo de 2 segundos en el 95% de las solicitudes.
-
-- **RNF03 – Adaptabilidad**  
-  El sistema debe permitir la incorporación de nuevas funcionalidades sin afectar las existentes mediante una arquitectura modular basada en MVC.
-
-- **RNF04 – Disponibilidad**  
-  El sistema debe garantizar una disponibilidad mínima del 99% mensual.
-
-- **RNF05 – Usabilidad**  
-  Al menos el 80% de los usuarios debe poder utilizar las funcionalidades principales sin asistencia.
-
-- **RNF06 – Compatibilidad**  
-  El sistema debe funcionar correctamente en los navegadores Chrome, Edge y Firefox en sus versiones recientes.
+![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-1.png)
+![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-2.png)
+![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-3.png)
+![Informe PETI Imprimible](docs/capturas/informe-peti-pdf-4.png)
 
 ---
+
