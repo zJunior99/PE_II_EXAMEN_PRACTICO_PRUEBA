@@ -1,0 +1,64 @@
+# Ejemplo de variables de entorno para Supabase
+# Rellena con tus valores reales antes de usar.
+
+SUPABASE_URL=https://tplwhxsxsmllyyynwhdk.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwbHdoeHN4c21sbHl5eW53aGRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMDMzMjgsImV4cCI6MjA5MzY3OTMyOH0.9Jg6_iz-jpAz3N8g6GoljhZmD3OFIe2edg-gHUZ_E7M
+
+# Supabase - servidor (opcional, secreto)
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwbHdoeHN4c21sbHl5eW53aGRrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODEwMzMyOCwiZXhwIjoyMDkzNjc5MzI4fQ.fOsOqy6a6K_6M4Dr_GRZtNuMeqG3HDKP7AcLrlGQP0g
+
+# Base de datos Postgres (string de conexión)
+DATABASE_URL=postgres://user:password@db.host:5432/dbname
+
+# Configuración de la app
+APP_ENV=development
+APP_DEBUG=true
+
+# Opcional: URL de callback para autenticación (si la usas)
+SUPABASE_AUTH_CALLBACK_URL=http://localhost:8000/auth/callback
+
+# php -S localhost:8000 -t public
+
+
+-----
+
+### Archivos modificados o creados
+
+- `app/Services/PetiAnalysisService.php`
+- `app/Controllers/ProyectoController.php`
+- `public/detalle-proyecto.php`
+- `public/reporte-proyecto.php`
+- `app/Views/proyectos/detalle-proyecto.php`
+- `app/Views/proyectos/detalle-panel.php`
+- `app/Views/proyectos/reporte-proyecto.php`
+
+git add app/Services/PetiAnalysisService.php app/Controllers/ProyectoController.php public/detalle-proyecto.php
+git commit -m "feat: agregar analisis de madurez PETI"
+
+git add app/Views/proyectos/detalle-proyecto.php app/Views/proyectos/detalle-panel.php
+git commit -m "feat: mostrar semaforo y resumen ejecutivo PETI"
+
+git add public/reporte-proyecto.php app/Views/proyectos/reporte-proyecto.php app/Services/PetiAnalysisService.php
+git commit -m "feat: agregar informe PETI imprimible con BCG y cadena de valor"
+
+
+git push origin main
+
+
+
+La forma más fácil:
+
+Opción 1 — Desde VS Code (recomendada)
+1. Instala extensión:
+Markdown PDF
+
+Autor:
+
+yzane
+2. Abre tu README.md
+3. Presiona:
+Ctrl + Shift + P
+4. Escribe:
+Markdown PDF: Export (pdf)
+
+Y listo.
